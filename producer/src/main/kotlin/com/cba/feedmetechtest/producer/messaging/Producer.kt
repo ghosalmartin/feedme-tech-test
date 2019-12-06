@@ -10,6 +10,6 @@ class Producer(private val kafkaTemplate: KafkaTemplate<String, Message>) {
     }
 
     fun produce(message: Message) {
-        kafkaTemplate.send(TOPIC, message)
+        kafkaTemplate.send(TOPIC, message.body.eventId, message)
     }
 }
