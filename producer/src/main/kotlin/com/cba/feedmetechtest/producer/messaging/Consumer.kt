@@ -1,4 +1,4 @@
-package com.cba.feedmetechtest.demo.messaging
+package com.cba.feedmetechtest.producer.messaging
 
 import java.io.BufferedReader
 import java.net.Socket

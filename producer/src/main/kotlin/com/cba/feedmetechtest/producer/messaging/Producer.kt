@@ -1,6 +1,6 @@
-package com.cba.feedmetechtest.demo.messaging
+package com.cba.feedmetechtest.producer.messaging
 
-import com.cba.feedmetechtest.demo.models.Message
+import com.cba.feedmetechtest.models.Message
 import org.springframework.kafka.core.KafkaTemplate
 
 class Producer(private val kafkaTemplate: KafkaTemplate<String, Message>) {

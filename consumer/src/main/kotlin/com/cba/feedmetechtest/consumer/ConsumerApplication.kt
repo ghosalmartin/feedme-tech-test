@@ -1,9 +1,7 @@
-package com.cba.feedmetechtest.demo
+package com.cba.feedmetechtest.consumer
 
-import com.cba.feedmetechtest.demo.messaging.Consumer
-import com.cba.feedmetechtest.demo.messaging.Producer
-import com.cba.feedmetechtest.demo.models.Message
-import com.cba.feedmetechtest.demo.models.toMessage
+import com.cba.feedmetechtest.consumer.messaging.Consumer
+import com.cba.feedmetechtest.models.Message
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -12,13 +10,11 @@ import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.serializer.JsonSerializer
-import org.springframework.scheduling.annotation.EnableAsync
 
 
-@EnableAsync
 @EnableKafka
 @SpringBootApplication
-class DemoApplication
+class ConsumerApplication
 
 private val kafkaTemplate: KafkaTemplate<String, Message> = KafkaTemplate(
     DefaultKafkaProducerFactory(
@@ -31,11 +27,7 @@ private val kafkaTemplate: KafkaTemplate<String, Message> = KafkaTemplate(
 )
 
 private val consumer = Consumer()
-private val producer = Producer(kafkaTemplate)
 
 fun main(args: Array<String>) {
-    runApplication<DemoApplication>(*args)
-    consumer.consume {
-        producer.produce(it.toMessage())
-    }
+    runApplication<ConsumerApplication>(*args)
 }

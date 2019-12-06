@@ -1,4 +1,4 @@
-package com.cba.feedmetechtest.demo.models
+package com.cba.feedmetechtest.models
 
 data class Message(
     val header: Header,

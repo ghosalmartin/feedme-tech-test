@@ -40,7 +40,7 @@ config/runtime.yaml
 Berksfile.lock
 #Mac generated
 .DS_Store
-build/*
+build/
 
 test/integration
 

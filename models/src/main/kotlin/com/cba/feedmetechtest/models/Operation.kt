@@ -1,4 +1,4 @@
-package com.cba.feedmetechtest.demo.models
+package com.cba.feedmetechtest.models
 
 enum class Operation(val string: String) {
     CREATE("create"),
