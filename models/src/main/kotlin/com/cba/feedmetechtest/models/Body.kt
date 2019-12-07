@@ -1,36 +1,47 @@
 package com.cba.feedmetechtest.models
 
-import java.math.BigDecimal
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import java.math.BigInteger
 
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+@JsonSubTypes(
+    JsonSubTypes.Type(Body.Event::class, name = Body.EVENT_TYPE),
+    JsonSubTypes.Type(Body.Market::class, name = Body.MARKET_TYPE),
+    JsonSubTypes.Type(Body.Outcome::class, name = Body.OUTCOME_TYPE)
+)
 sealed class Body(
-    open val eventId: String,
+    open val parentId: String,
     open val name: String,
     open val displayed: Boolean,
     open val suspended: Boolean
 ) {
 
     companion object {
-        private const val MARKET_TYPE = "market"
-        private const val OUTCOME_TYPE = "outcome"
-        private const val EVENT_TYPE = "event"
+        internal const val EVENT_TYPE = "event"
+        internal const val MARKET_TYPE = "market"
+        internal const val OUTCOME_TYPE = "outcome"
 
         fun fromList(type: String, fields: List<String>): Body =
             when (type) {
+                EVENT_TYPE -> Event.fromList(fields)
                 MARKET_TYPE -> Market.fromList(fields)
                 OUTCOME_TYPE -> Outcome.fromList(fields)
-                EVENT_TYPE -> Event.fromList(fields)
                 else -> throw IllegalArgumentException("unknown type")
             }
     }
 
     data class Event(
-        override val eventId: String,
+        val eventId: String,
         val category: String,
         val subCategory: String,
         override val name: String,
-        val startTime: BigDecimal,
+        val startTime: BigInteger,
         override val displayed: Boolean,
-        override val suspended: Boolean
+        override val suspended: Boolean,
+        @JsonProperty("@type") val type: String = EVENT_TYPE
     ) : Body(eventId, name, displayed, suspended) {
         companion object {
             fun fromList(fields: List<String>): Body =
@@ -39,7 +50,7 @@ sealed class Body(
                     fields[1],
                     fields[2],
                     fields[3],
-                    fields[4].toBigDecimal(),
+                    fields[4].toBigInteger(),
                     fields[5].to01Boolean(),
                     fields[6].to01Boolean()
                 )
@@ -48,11 +59,12 @@ sealed class Body(
     }
 
     data class Market(
-        override val eventId: String,
+        val eventId: String,
         val marketId: String,
         override val name: String,
         override val displayed: Boolean,
-        override val suspended: Boolean
+        override val suspended: Boolean,
+        @JsonProperty("@type") val type: String = MARKET_TYPE
     ) : Body(eventId, name, displayed, suspended) {
         companion object {
             fun fromList(fields: List<String>): Body =
@@ -67,13 +79,14 @@ sealed class Body(
     }
 
     data class Outcome(
-        override val eventId: String,
+        val marketId: String,
         val outcomeId: String,
         override val name: String,
         val price: String,
         override val displayed: Boolean,
-        override val suspended: Boolean
-    ) : Body(eventId, name, displayed, suspended) {
+        override val suspended: Boolean,
+        @JsonProperty("@type") val type: String = OUTCOME_TYPE
+    ) : Body(marketId, name, displayed, suspended) {
         companion object {
             fun fromList(fields: List<String>): Body =
                 Outcome(
@@ -85,7 +98,6 @@ sealed class Body(
                     fields[5].to01Boolean()
                 )
         }
-
     }
 }
 

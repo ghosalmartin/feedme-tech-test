@@ -5,6 +5,9 @@ plugins {
 }
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
+
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:+")
 }
 
 val compileKotlin: KotlinCompile by tasks
