@@ -3,6 +3,7 @@ package com.cba.feedmetechtest.consumer.db.models
 import com.cba.feedmetechtest.models.Body
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.math.BigInteger
 
 @Document("event")
 data class EventModel(
@@ -10,6 +11,7 @@ data class EventModel(
     val category: String,
     val subCategory: String,
     val name: String,
+    val startTime: BigInteger,
     val suspended: Boolean,
     val displayed: Boolean,
     val markets: List<MarketModel> = emptyList()
@@ -22,6 +24,7 @@ data class EventModel(
                 category = body.category,
                 subCategory = body.subCategory,
                 name = body.name,
+                startTime = body.startTime,
                 suspended = body.suspended,
                 displayed = body.displayed
             )
