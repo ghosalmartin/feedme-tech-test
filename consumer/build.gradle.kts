@@ -7,21 +7,27 @@ plugins {
 	kotlin("plugin.spring") version "1.3.50"
 }
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
 	implementation(project(":models"))
 
+	implementation(kotlin("stdlib-jdk8"))
+	implementation(kotlin("reflect"))
+
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.kafka:spring-kafka")
 
-	implementation("org.apache.kafka:kafka-streams")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
 
-	testImplementation("org.springframework.amqp:spring-rabbit-test")
 	testImplementation("org.springframework.kafka:spring-kafka-test")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 val compileKotlin: KotlinCompile by tasks
