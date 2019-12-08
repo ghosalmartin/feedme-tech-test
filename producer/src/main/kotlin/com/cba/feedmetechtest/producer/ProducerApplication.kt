@@ -18,7 +18,7 @@ class ProducerApplication
 private val kafkaTemplate: KafkaTemplate<String, Message> = KafkaTemplate(
     DefaultKafkaProducerFactory(
         mutableMapOf<String, Any>(
-            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "192.168.0.18:9092",
+            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "${System.getenv("HOST_IP_ADDR")}:${System.getenv("HOST_IP_PORT")}",
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java
         )
