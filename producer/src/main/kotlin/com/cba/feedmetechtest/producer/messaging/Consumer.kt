@@ -7,7 +7,7 @@ class Consumer(
     private val reader: Reader =
         SocketFactory
             .getDefault()
-            .createSocket("localhost", 8282)
+            .createSocket(System.getenv("PROVIDER_IP"), System.getenv("PROVIDER_PORT").toInt())
             .getInputStream()
             .bufferedReader()
 ) {
