@@ -8,9 +8,9 @@ import java.math.BigInteger
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes(
-    JsonSubTypes.Type(Body.Event::class, name = Body.EVENT_TYPE),
-    JsonSubTypes.Type(Body.Market::class, name = Body.MARKET_TYPE),
-    JsonSubTypes.Type(Body.Outcome::class, name = Body.OUTCOME_TYPE)
+    JsonSubTypes.Type(Body.Event::class, name = Type.EVENT_TYPE),
+    JsonSubTypes.Type(Body.Market::class, name = Type.MARKET_TYPE),
+    JsonSubTypes.Type(Body.Outcome::class, name = Type.OUTCOME_TYPE)
 )
 sealed class Body(
     open val parentId: String,
@@ -20,16 +20,11 @@ sealed class Body(
 ) {
 
     companion object {
-        internal const val EVENT_TYPE = "event"
-        internal const val MARKET_TYPE = "market"
-        internal const val OUTCOME_TYPE = "outcome"
-
-        fun fromList(type: String, fields: List<String>): Body =
+        fun fromList(type: Type, fields: List<String>): Body =
             when (type) {
-                EVENT_TYPE -> Event.fromList(fields)
-                MARKET_TYPE -> Market.fromList(fields)
-                OUTCOME_TYPE -> Outcome.fromList(fields)
-                else -> throw IllegalArgumentException("unknown type")
+                Type.EVENT -> Event.fromList(fields)
+                Type.MARKET -> Market.fromList(fields)
+                Type.OUTCOME -> Outcome.fromList(fields)
             }
     }
 
@@ -41,7 +36,7 @@ sealed class Body(
         val startTime: BigInteger,
         override val displayed: Boolean,
         override val suspended: Boolean,
-        @JsonProperty("@type") val type: String = EVENT_TYPE
+        @JsonProperty("@type") val type: String = Type.EVENT.type
     ) : Body(eventId, name, displayed, suspended) {
         companion object {
             fun fromList(fields: List<String>): Body =
@@ -64,7 +59,7 @@ sealed class Body(
         override val name: String,
         override val displayed: Boolean,
         override val suspended: Boolean,
-        @JsonProperty("@type") val type: String = MARKET_TYPE
+        @JsonProperty("@type") val type: String = Type.MARKET.type
     ) : Body(eventId, name, displayed, suspended) {
         companion object {
             fun fromList(fields: List<String>): Body =
@@ -85,7 +80,7 @@ sealed class Body(
         val price: String,
         override val displayed: Boolean,
         override val suspended: Boolean,
-        @JsonProperty("@type") val type: String = OUTCOME_TYPE
+        @JsonProperty("@type") val type: String = Type.OUTCOME.type
     ) : Body(marketId, name, displayed, suspended) {
         companion object {
             fun fromList(fields: List<String>): Body =
