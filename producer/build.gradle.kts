@@ -13,9 +13,9 @@ dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
 
-    implementation("org.springframework.boot:spring-boot-starter-amqp")
+    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.kafka:spring-kafka")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1")
 
     implementation("org.apache.kafka:kafka-streams")
 

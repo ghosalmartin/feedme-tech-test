@@ -17,11 +17,11 @@ dependencies {
 	implementation(kotlin("stdlib-jdk8"))
 	implementation(kotlin("reflect"))
 
-	implementation("org.springframework.boot:spring-boot-starter-amqp")
+	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.kafka:spring-kafka")
 
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
