@@ -32,9 +32,12 @@ class DbWriter(
 
     private fun saveEvent(body: Body.Event) = mongoOps.save(EventModel.fromBody(body))
 
-    private fun saveMarket(body: Body.Market) = mongoOps.findById(body.eventId, EventModel::class.java)?.let {
-        mongoOps.save(it.copy(markets = it.markets.plus(MarketModel.fromBody(body))))
-    }
+    private fun saveMarket(body: Body.Market) =
+        mongoOps.findById(body.eventId, EventModel::class.java)?.let { matchedEventModel ->
+            matchedEventModel.upsertMarket(body).let { updatedEventModel ->
+                mongoOps.save(updatedEventModel)
+            }
+        }
 
     private fun saveOutcome(body: Body.Outcome) =
         mongoOps.find(
@@ -44,6 +47,18 @@ class DbWriter(
             mongoOps.save(it)
         }
 }
+
+fun EventModel.upsertMarket(market: Body.Market): EventModel =
+    markets.find { it.id == market.marketId }?.let { existingMarket ->
+        copy(
+            markets = markets
+                //Delete old market incase it already exists
+                .filterNot { it.id == existingMarket.id }
+                .plus(MarketModel.fromBody(market).copy(outcomes = existingMarket.outcomes))
+            // Assume we still want the outcomes and not start a fresh if a market is updated?
+        )
+        //If no matches then assume a creation, maybe I should of just used the stated operation flag
+    } ?: copy(markets = markets.plus(MarketModel.fromBody(market)))
 
 fun EventModel.upsertOutcome(outcome: Body.Outcome) =
     markets.find { it.id == outcome.marketId }?.let { market ->

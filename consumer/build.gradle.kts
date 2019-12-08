@@ -27,7 +27,7 @@ dependencies {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
 
-	testImplementation("org.springframework.kafka:spring-kafka-test")
+	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
 val compileKotlin: KotlinCompile by tasks

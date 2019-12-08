@@ -25,7 +25,6 @@ dependencies {
     }
 
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-    testImplementation("org.springframework.kafka:spring-kafka-test")
 }
 
 val compileKotlin: KotlinCompile by tasks
