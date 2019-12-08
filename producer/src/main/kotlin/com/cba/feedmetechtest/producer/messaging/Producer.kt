@@ -6,7 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate
 class Producer(private val kafkaTemplate: KafkaTemplate<String, Message>) {
 
     companion object {
-        private const val TOPIC = "dev.betting"
+        const val TOPIC = "dev.betting"
     }
 
     fun produce(message: Message) {
