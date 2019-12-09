@@ -18,23 +18,41 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: $HOST_IP_ADDR # eg: HOST_IP_ADDR=$(ipconfig getifaddr en0) docker-compose up
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "dev.betting:5:1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - zookeeper
-
-  #rabbitmq:
-  #    image: rabbitmq:3-management
-  #    ports:
-  #      - "15672:15672"
-  #      - "5672:5672"
-  #    environment:
-  #      RABBITMQ_DEFAULT_PASS: "rabbitmq"
-  #      RABBITMQ_DEFAULT_USER: "rabbitmq"
-  #      RABBITMQ_DEFAULT_VHOST: "/feedme"
 
   provider:
     image: tsgtechtest/provider:1.0.0
     ports:
       - "8181:8181"
       - "8282:8282"
+
+  producer:
+    build: producer/
+    environment:
+      HOST_IP_ADDR: $HOST_IP_ADDR
+      HOST_IP_PORT: 9092
+      PROVIDER_IP: provider
+      PROVIDER_PORT: 8282
+    ports:
+      - "8383:8383"
+    depends_on:
+      - kafka
+      - provider
+      - zookeeper
+
+  consumer:
+    network_mode: "host"
+    build: consumer/
+    environment:
+      SPRING_KAFKA_LISTENER_MISSING_TOPICS_FATAL: "false"
+    expose:
+      - "8484-8498"
+    depends_on:
+      - producer
+      - zookeeper
+      - kafka
+      - mongo
